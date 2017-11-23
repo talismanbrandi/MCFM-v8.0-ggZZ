@@ -36,11 +36,11 @@ c--- do not allow a cut on m34 for direct photon process, or tau pairs
         wsqmax=81d8
       endif
 
-c---- do not allow cuts on m34 if doing gamma gamma (will be done elsewhere) 
-      if((kcase==kgamgam) .or. (kcase==kgg2gam) .or. (kcase==kgmgmjt)) then 
-         return 
+c---- do not allow cuts on m34 if doing gamma gamma (will be done elsewhere)
+      if((kcase==kgamgam) .or. (kcase==kgg2gam) .or. (kcase==kgmgmjt)) then
+         return
       endif
-     
+
 c---- check to see whether this is a VBS process
       if ( ((nproc >= 220) .and. (nproc <= 229))
      & .or. (nproc == 2201) .or. (nproc == 2221)
@@ -83,7 +83,7 @@ c--- only apply cuts on s34 if vectors 3 and 4 are defined
 c--- do not accept s34<cutoff either
         if ((s34 < max(wsqmin,cutoff)).or.(s34 > wsqmax)) return 1
       endif
-         
+
 c--- only apply cuts on s56 if vectors 5 and 6 are defined
       if ((abs(p(5,4)) > 1.e-8_dp) .and. (abs(p(6,4)) > 1.e-8_dp)) then
         s56=+(p(5,4)+p(6,4))**2-(p(5,1)+p(6,1))**2
@@ -92,7 +92,7 @@ c--- do not accept s56<cutoff either
 c        if ((s56 < max(bbsqmin,cutoff)).or.(s56>bbsqmax)) return 1
         if ((s56 < bbsqmin).or.(s56>bbsqmax)) return 1
       endif
-     
+
       if (interference) then
       s45=+(p(4,4)+p(5,4))**2-(p(4,1)+p(5,1))**2
      &    -(p(4,2)+p(5,2))**2-(p(4,3)+p(5,3))**2
@@ -121,8 +121,7 @@ c        if ((s56 < max(bbsqmin,cutoff)).or.(s56>bbsqmax)) return 1
 
    97 format(' *          ',f8.2,'  <  ',a5,' < ',f8.2,'           *')
    98 format(' *      ',f8.2,'  <   ',a12,'  < ',f8.2,'      *')
-   99 format(' *          ',f8.2,'  <   ',a3,'  < ',f8.2,'           *')
+   99 format(' *          ',f8.2,'  <   ',a3,'  < ',f9.2,'           *')
 
       return
       end
-
