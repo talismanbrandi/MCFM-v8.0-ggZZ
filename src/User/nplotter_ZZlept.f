@@ -14,7 +14,7 @@ c
 c--- switch:  an integer:: equal to 0 or 1, depending on the type of event
 c---                0  --> lowest order, virtual or real radiation
 c---                1  --> counterterm for real radiation
-      
+
       include 'vegas_common.f'
       include 'constants.f'
       include 'nf.f'
@@ -35,7 +35,7 @@ ccccc!$omp threadprivate(first,/nplotmax/)
 *     INITIAL BOOKKEEPING                                              *
 *                                                                      *
 ************************************************************************
-      
+
       if (first) then
 c--- Initialize histograms, without computing any quantities; instead
 c--- set them to dummy values
@@ -57,9 +57,9 @@ c--- Add event in histograms
      &     -(p(3,2)+p(4,2)+p(5,2)+p(6,2))**2
      &     -(p(3,3)+p(4,3)+p(5,3)+p(6,3))**2
       m3456=sqrt(max(m3456,zip))
-      
+
       pt34=pttwo(3,4,p)
-       
+
 ************************************************************************
 *                                                                      *
 *     FILL HISTOGRAMS                                                  *
@@ -72,7 +72,7 @@ c--- Call histogram routines
 c--- Book and fill ntuple if that option is set, remembering to divide
 c--- by # of iterations now that is handled at end for regular histograms
       if (creatent .eqv. .true.) then
-        call bookfill(tag,p,wt/real(itmx,dp))  
+        call bookfill(tag,p,wt/real(itmx,dp))
       endif
 
 c--- "n" will count the number of histograms
@@ -94,34 +94,48 @@ c---       dx:  bin width
 c---   llplot:  equal to "lin"/"log" for linear/log scale
 
 c--- Plots of m(3456) in specific regions
+c--- Modifications for adding a few relevant extended histograms
+      call bookplot(n,tag,'60 < m(3456) < 2010',
+     & m3456,wt,wt2,60._dp,2010._dp,10._dp,'log')
+      n=n+1
+
+      call bookplot(n,tag,'250 < m(3456) < 4000',
+     & m3456,wt,wt2,250._dp,4000._dp,20._dp,'log')
+      n=n+1
+
+      call bookplot(n,tag,'250 < m(3456) < 10000',
+     & m3456,wt,wt2,250._dp,10000._dp,50._dp,'log')
+      n=n+1
+c--- End Modification
+
       call bookplot(n,tag,'10 < m(3456) < 2010',
      & m3456,wt,wt2,10._dp,2010._dp,20._dp,'log')
       n=n+1
-      
+
       call bookplot(n,tag,'130 < m(3456) < 2010',
      & m3456,wt,wt2,130._dp,2010._dp,20._dp,'log')
       n=n+1
-      
+
       call bookplot(n,tag,'300 < m(3456) < 2020',
      & m3456,wt,wt2,300._dp,2020._dp,20._dp,'log')
       n=n+1
-      
+
       call bookplot(n,tag,'10 < m(3456) < 130',
      & m3456,wt,wt2,10._dp,130._dp,5._dp,'lin')
       n=n+1
-      
+
       call bookplot(n,tag,'pt(Z)',
      & pt34,wt,wt2,0._dp,2._dp,0.02_dp,'lin')
       n=n+1
-      
+
       call bookplot(n,tag,'+INTEGRAL+ pt(Z)',
      & pt34,wt,wt2,0._dp,10._dp,0.1_dp,'lin')
       n=n+1
-      
+
       call bookplot(n,tag,'50 < m(3456) < 250',
      & m3456,wt,wt2,50._dp,250._dp,2._dp,'log')
       n=n+1
-      
+
 c--- usual plots for 3+4
       call autoplot2(p,34,3,4,tag,wt,wt2,n)
 
@@ -139,7 +153,7 @@ c--- usual plots for 4+5
 c--- usual plots for 3+4+5+6
       call autoplot4(p,3456,3,4,5,6,tag,wt,wt2,n)
 
-c--- additional plots that may be present at NLO       
+c--- additional plots that may be present at NLO
       if (abs(p(7,4)) > 1.e-8_dp) then
         call autoplot1(p,7,tag,wt,wt2,n)
       else
@@ -155,7 +169,7 @@ c--- additional plots that may be present at NLO
 c--- We have over-counted the number of histograms by 1 at this point
       n=n-1
 
-c--- Ensure the built-in maximum number of histograms is not exceeded    
+c--- Ensure the built-in maximum number of histograms is not exceeded
       call checkmaxhisto(n)
 
 c--- Set the maximum number of plots, on the first call
@@ -163,6 +177,6 @@ c--- Set the maximum number of plots, on the first call
         first=.false.
         nplotmax=n
       endif
-      
+
       return
       end
