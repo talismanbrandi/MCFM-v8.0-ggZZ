@@ -1,11 +1,13 @@
 #!/bin/bash
-
+## This file is modified to clean all built files and remake them.
+#clean MCFM in case it was built earlier
+make clean
 # first configure the makefile
 
 # Insert the location of Cernlib on your system (if desired)
-set CERNLIB     = 
+set CERNLIB     =
 # Insert the location of LHAPDF on your system (if desired)
-set LHAPDFLIB   = 
+set LHAPDFLIB   =
 
 if [$CERNLIB == '']; then
   echo 'Warning: no directory specified for CERNLIB'
@@ -41,9 +43,9 @@ cd ..
 
 # Link FF data files into Bin directory
 if [ ! -h Bin/ffwarn.dat ]; then
-  ln -s ../QCDLoop/ff/fferr.dat Bin
-  ln -s ../QCDLoop/ff/ffperm5.dat Bin
-  ln -s ../QCDLoop/ff/ffwarn.dat Bin
+  ln -sf ../QCDLoop/ff/fferr.dat Bin
+  ln -sf ../QCDLoop/ff/ffperm5.dat Bin
+  ln -sf ../QCDLoop/ff/ffwarn.dat Bin
 fi
 
 # Compile QCDLoop libraries if necessary
@@ -53,6 +55,7 @@ if [ ! -e QCDLoop/ql/libqcdloop.a ]; then
   ls
   echo 'Compiling QCDLoop library'
   cd QCDLoop
+  make clean
   make
   cd ..
 fi
@@ -67,7 +70,8 @@ mkdir -p TensorReduction/recur/smallY/obj
 if [ ! -e TensorReduction/pv/libpv.a ]; then
   ls
   echo 'Compiling TensorReduction library'
-  cd TensorReduction 
+  cd TensorReduction
+  make clean
   make
   cd ..
 fi
