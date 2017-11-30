@@ -6,7 +6,7 @@ c--- input parameter 'tag'; if 'tag' is set to 'WRITEALL' then all
 c--- of the input file is echoed.
 c--- Output is written to the unit 'unitno', with lines bracketed
 c--- by the strings 'lstring' and 'rstring'
-      
+
       include 'constants.f'
       include 'nf.f'
       include 'mxpart.f'
@@ -64,7 +64,13 @@ c--- APPLgrid - end
       integer:: ih1,ih2,origij
       integer:: NPTYPE,NGROUP,NSET
       real(dp):: rtsmin,Rcut
- 
+c --- BEGIN MODIFICATION for MODS-2
+      real(dp):: ct,cg
+
+      common/ct/ct
+      common/cg/cg
+c --- END MODIFICATION for MODS-2
+
       common/writerefs/writerefs
       common/spira/spira
       common/nmin/nmin
@@ -73,9 +79,9 @@ c--- APPLgrid - end
 
       common/density/ih1,ih2
       common/dryrun/dryrun
-      
+
       common/pdflib/NPTYPE,NGROUP,NSET
-      
+
       common/Rcut/Rcut
       common/makecuts/makecuts
 
@@ -83,33 +89,33 @@ c--- APPLgrid - end
 
 c--- f93 scientific format
       f93='('''//lstring//''',es20.2E2,12x,''['',a,'']'','''
-     & //rstring//''')' 
-c--- f94 integer::.XXYY format      
+     & //rstring//''')'
+c--- f94 integer::.XXYY format
       f94='('''//lstring//''',11x,i4,''.'',2a2,12x,''['',a,'']'','''
-     & //rstring//''')' 
+     & //rstring//''')'
 c--- f95 2xfloating point format
       f95='('''//lstring//''',f8.3,'','',f8.3,16x,''['',a,'']'','''
-     & //rstring//''')' 
-c--- f96 character format            
-      f96='('''//lstring//''',a20,12x,''['',a,'']'','''//rstring//''')' 
-c--- f97 integer:: format      
-      f97='('''//lstring//''',i20,12x,''['',a,'']'','''//rstring//''')' 
-c--- f98 logical:: format      
-      f98='('''//lstring//''',L20,12x,''['',a,'']'','''//rstring//''')' 
+     & //rstring//''')'
+c--- f96 character format
+      f96='('''//lstring//''',a20,12x,''['',a,'']'','''//rstring//''')'
+c--- f97 integer:: format
+      f97='('''//lstring//''',i20,12x,''['',a,'']'','''//rstring//''')'
+c--- f98 logical:: format
+      f98='('''//lstring//''',L20,12x,''['',a,'']'','''//rstring//''')'
 c--- f99 floating point format
       f99='('''//lstring//''',f20.4,12x,''['',a,'']'','''
-     & //rstring//''')' 
-    
+     & //rstring//''')'
+
       writeall=.false.
       if (tag == 'WRITEALL') writeall=.true.
-      
+
       if (writeall) then
       write(unitno,*) lstring//' Run corresponds to this input file)'
       write(unitno,*)
       write(unitno,*)
      & lstring//' [Flags to specify the mode in which MCFM is run] )'
       endif
-      
+
       if ((tag == 'nevtrequested') .or. (writeall)) then
       write(unitno,fmt=f97) nevtrequested,'nevtrequested'
       endif
@@ -237,10 +243,10 @@ c--- catch special scale choices for stop+b process
       if ((tag == 'Gflag') .or. (writeall)) then
       write(unitno,fmt=f98) Gflag,'Gflag'
       endif
-      
+
       if (writeall) then
       write(unitno,*)
-      write(unitno,*) 
+      write(unitno,*)
      & lstring//' [Heavy quark masses] )'
       endif
       if ((tag == 'top mass') .or. (writeall)) then
@@ -255,7 +261,7 @@ c--- catch special scale choices for stop+b process
 
       if (writeall) then
       write(unitno,*)
-      write(unitno,*) 
+      write(unitno,*)
      & lstring//' [Pdf selection] )'
       endif
       if ((tag == 'pdlabel') .or. (writeall)) then
@@ -465,11 +471,11 @@ c--- catch special scale choices for stop+b process
       if ((tag == 'hwidth_ratio') .or. (writeall)) then
       write(unitno,fmt=f99) hwidth_ratio,'Gamma_H/Gamma_H(SM)'
       endif
-      
+
 
       if (writeall) then
       write(unitno,*)
-      write(unitno,*) 
+      write(unitno,*)
      & lstring//' [How to resume/save a run] )'
       endif
       if ((tag == 'readin') .or. (writeall)) then
@@ -562,21 +568,28 @@ c--- catch special scale choices for stop+b process
       if ((tag == 'bff') .or. (writeall)) then
       write(unitno,fmt=f99) bff,'bff'
       endif
-      
+c --- BEGIN MODIFICATION for MODS-2
+      if ((tag .eq. 'ct') .or. (writeall)) then
+      write(unitno,fmt=f99) ct,'ct'
+      endif
+      if ((tag .eq. 'cg') .or. (writeall)) then
+      write(unitno,fmt=f99) cg,'cg'
+      endif
+c --- END MODIFICATION for MODS-2
+
       if (writeall) then
       write(unitno,*)
       endif
-      
+
       return
 
-c--- 96 character format      
-c   96 format(' (',a20,12x,'[',a,']',' )')  
-c--- 97 integer:: format      
-c   97 format(' (',i20,12x,'[',a,']',' )')  
-c--- 98 logical:: format      
-c   98 format(' (',L20,12x,'[',a,']',' )')  
+c--- 96 character format
+c   96 format(' (',a20,12x,'[',a,']',' )')
+c--- 97 integer:: format
+c   97 format(' (',i20,12x,'[',a,']',' )')
+c--- 98 logical:: format
+c   98 format(' (',L20,12x,'[',a,']',' )')
 c--- 99 floating point format
-c   99 format(' (',f20.4,12x,'[',a,']',' )')  
-      
+c   99 format(' (',f20.4,12x,'[',a,']',' )')
+
       end
-      
